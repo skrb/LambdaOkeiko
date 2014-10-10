@@ -397,10 +397,8 @@
         <p>&nbsp;</p>
         <p>では、これらのメソッドを使って、for 文をストリームに書き換えて見ましょう。</p>
         <p>&nbsp;</p>
-        <h4>4-1. Stream で書き換えてみましょう</h4>
-        <p>はじめに行うのが、条件文を含む拡張 for 文です。 </p>
-        <p>最終的に行う処理は標準出力への出力なので、これは forEach メソッドが使用できます。まず、すべてを forEach メソッドで記述してみましょう。</p>
-        <p>次に条件文を filter メソッドで書き換えることに挑戦してみましょう。</p>
+        <h4>4-1. collect で書き換えてみましょう</h4>
+        <p>。</p>
         <div>
           <pre class="prettyprint">        List&lt;Integer&gt; numbers = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         for (Integer x: numbers) {
@@ -411,15 +409,8 @@
         System.out.println();</pre>
         </div>
         <p>&nbsp;</p>
-        <h4>4-2. Stream で書き換えてみましょう</h4>
-        <p>乱数から生成したリストの平均と分散を求める処理をストリームにしてみましょう。</p>
-        <p>まず、乱数をリストに追加する処理です。</p>
-        <p>この for 文ももちろんストリームで記述できます。</p>
-        <p>この処理でキーになるのはリストに追加しているのが、ループカウンタではないということです。イテレーションしている値を他の値に変えるにはどうすればよいでしょうか。</p>
-        <p>さらに、リストの生成についてもストリームの処理で行えないかどうかを考えてみましょう。</p>
-        <p>ストリームの処理の結果として値を返すには reduce メソッドか、collect メソッドを使用します。reduce メソッドはイテレートする要素の型と同じ型を戻り値とします。これに対して、collect メソッドは任意の型を戻り値にとることができます。</p>
-        <p>ということは....</p>
-        <p>collect メソッドの引数には Collectors クラスのユーティリティメソッドの戻り値を私用する場合がほとんどです。この場合、何が使用できるかチェックしてみましょう。</p>
+        <h4>4-2. collect で書き換えてみましょう</h4>
+        <p>。</p>
         <p>&nbsp;</p>
         <div>
           <pre class="prettyprint">        Random random = new Random();
@@ -428,29 +419,9 @@
             numbers.add(random.nextDouble());
         }</pre>
         </div>
-        <p>さて、生成したリストの平均を算出しましょう。</p>
-        <p>この場合、中間操作は必要ないので、いきなり終端操作を記述します。この場合のように、すべての要素をまとめて 1 つの値にまとめるには、reduce メソッドか collect メソッドを使用します。</p>
-        <p>ここでは、reduce メソッドを使用してみましょう。collect メソッドを使用した場合も、reduce メソッドの使い方が分からないと記述できないので、reduce メソッドをまず攻略してみましょう。</p>
-        <p>reduce メソッドで処理が記述できたら、このコードをもう少し効率よく記述できないか考えてみましょう。キーになるのはオートボクシングです。 </p>
-        <div>
-          <pre class="prettyprint">        double ave = 0.0;
-        for (Double x: numbers) {
-            ave += x;
-        }
-        ave /= numbers.size();</pre>
-        </div>
-        <p>最後に分散処を求める処理です。平均が記述できれば、分散も簡単に書けるはずですよ。</p>
-        <div>
-          <pre class="prettyprint">        double div = 0.0;
-        for (Double x: numbers) {
-            div += (x - ave) * (x -ave);                    
-        }
-        div /= numbers.size();</pre>
-        </div>
         <p>&nbsp;</p>
-        <h4>4-3. Stream で書き換えてみましょう</h4>
-        <p>文字列を要素に持つリストを、個々の単語に分割して、新たにリストに保持させます。</p>
-        <p>１つの要素を分割して、それをまとめるメソッドがありましたよね。</p>
+        <h4>4-3. collect で書き換えてみましょう</h4>
+        <p>。</p>
         <p></p>
         <div>
           <pre class="prettyprint">        List&lt;String&gt; sentences = ...;
@@ -464,9 +435,8 @@
         }</pre>
         </div>
         <p>&nbsp;</p>
-        <h4>4-4. Stream で書き換えてみましょう</h4>
-        <p>次に行うのはファイルを読み込んで単語数を数えるプログラムの断片です。これも Stream で書き換えてみましょう。</p>
-        <p>ヒント: BufferReader クラスに Java SE 8 で追加されたメソッドがありますよ。</p>
+        <h4>4-4. collect で書き換えてみましょう</h4>
+        <p>。</p>
         <div>
           <pre class="prettyprint">        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
             int wordCount = 0;
@@ -486,8 +456,8 @@
         } </pre>
         </div>
         <p>&nbsp;</p>
-        <h4>4-5. Stream で書き換えてみましょう</h4>
-        <p>単語の切り出し、ワードカウントときたら、次は単語ごとの使用回数を数えてみましょう。結果はキーが単語、値が使用回数の Map にすることにします。</p>
+        <h4>4-5. collect で書き換えてみましょう</h4>
+        <p>。</p>
         <div>
           <pre class="prettyprint">        List&lt;String&gt; sentences = ...;
           
@@ -503,7 +473,6 @@
             }
         }</pre>
         </div>
-        <p>途中までは単語の切り出しと同じですね。単語を切り出した後に、どうやって集計をするかが肝になります。</p>
         <p>&nbsp;</p>
         <p>いかがでしたでしょうか。</p>
         <p>ちなみに、個々の問題は正解が 1 つとは限りません。いろいろな書き方があり、それに応じて使用するメソッドも変化します。いろいろな書き方をできるようにしておくと、応用範囲が広がると思います。</p>
