@@ -13,7 +13,6 @@
 
 <!-- Custom styles for this template -->
 <link href="starter.css" rel="stylesheet">
-
 <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 </head>
 
@@ -36,7 +35,7 @@
             <li>1. はじめに</li>
             <li><a href="#sec2">2. Lambda 式への書きかえ</a></li>
             <li><a href="#sec3">3. for 文の書きかえ (forEach)</a></li>
-            <li><a href="#sec4">4. for 文の書きかえ (colect)</a></li>
+            <li><a href="#sec4">4. for 文の書きかえ (collect)</a></li>
           </ul>
         </div>
       </div>
@@ -66,7 +65,7 @@
         <p>これ以外にも Java SE 8 から追加された java.util.function パッケージでいろいろな関数型インタフェースが提供されています。</p>
         <p>なぜ、実装すべきメソッドが 1 つのインタフェースを関数型インタフェースと呼ぶのでしょう。たとえば、ある処理を別のスレッドで実行したい場合、ExecutorService インタフェースを使って次のように記述することがあります。</p>
         <div>
-        <pre class="prettyprint">        // スレッドプールを生成
+          <pre class="prettyprint">        // スレッドプールを生成
         ExecutorService service = Executors.newCachedThreadPool();
         
         // 別スレッドで行いたい処理を表すためのRunnableオブジェクト
@@ -78,7 +77,8 @@
         };
         
         // 別スレッドで処理を行う
-        service.submit(task);</pre></div>
+        service.submit(task);</pre>
+        </div>
         <p>ExecutorService オブジェクトである service 変数はスレッドプールを表しています。そこに対して、別スレッドで行いたい処理を submit メソッドで指定します。</p>
         <p>本来であれば、run メソッドの内部に書いてある処理だけを submit メソッドに渡せばいいのですが、Java ではそれはできません。そこで、Runnable オブジェクトで行いたい処理をくるんで、それを submit メソッドに渡していきます。</p>
         <p>処理だけを表す書き方に関数があります。Java でいうところのメソッドのようなものです。関数型言語では、この関数を直接メソッドの引数に渡すことができます。Java では関数は渡せませんが、Runnable オブジェクトであれば渡せます。ということは、Runnable インタフェースはあたかも関数のように扱えるということです。</p>
@@ -87,39 +87,42 @@
         <p>そして、この関数型インタフェースを実装した匿名クラスの代わりになるのが、Lambda 式です。上のコードでも、本当に submit メソッドに渡したいのは run メソッドの内部だけなのに、匿名クラスでは定義する部分など冗長な部分が増えてしまいます。そこで、Lambda 式は匿名クラスの定義部分などは取っ払って、メソッド (もしくは関数) の部分だけ記述すればいいようにしたのです。</p>
         <p>Lambda 式は (引数) -&gt; { メソッド本体 } の形式で表します。引数は関数型インタフェースの実装すべきメソッドの引数を表し、処理はそのメソッドの実体を表しています。たとえば、上記の Runnable インタフェースの匿名クラスは次のように記述できます。</p>
         <div>
-        <pre class="prettyprint">        // 別スレッドで行いたい処理を表すためのLambda式
+          <pre class="prettyprint">        // 別スレッドで行いたい処理を表すためのLambda式
         Runnable task = () -> {
                 // 別スレッドで行いたい処理
-        };</pre></div>
+        };</pre>
+        </div>
         <p>ずいぶん、簡単になりました。Runnable インタフェースは引数がないので、丸カッコ () だけで、その後にメソッド本体を記述します。</p>
         <p>では、皆さんの番です。以下の関数型インタフェースを実装した匿名クラスを Lambda 式を書き換えてみてましょう。</p>
         <p>&nbsp;</p>
         <h4>2-1. Lambda 式で書き換えてみましょう</h4>
         <p>Comparator インタフェースは 2 つの引数の比較をするためのインタフェースです。ここでは、整数を表す Integer クラスを引数にとる Comparator インタフェースの実装匿名クラスを Lambda 式で書きかえてみましょう。</p>
         <div>
-        <pre class="prettyprint">        Comparator&lt;Integer&gt; comparator1 = new Comparator&lt;Integer&gt;() {
+          <pre class="prettyprint">        Comparator&lt;Integer&gt; comparator1 = new Comparator&lt;Integer&gt;() {
             @Override
             public int compare(Integer x, Integer y) {
                 return Integer.compare(x, y);
             }
-        };</pre></div>
+        };</pre>
+        </div>
         <p>&nbsp;</p>
         <h4>2-2. Lambda 式で書き換えてみましょう</h4>
         <p>Callable インタフェースは、別スレッドで処理を行うためのインタフェースです。時間がかかる処理を別スレッドで行う場合などに使用します。たとえば、別スレッドでファイルを読み込む処理を Lambda 式で書いてみましょう。</p>
         <p>ここで使用している Path インタフェースと Files クラスは Java SE 7 から使えるようになった、ファイルを扱うためのクラスです。</p>
         <div>
-        <pre class="prettyprint">        Callable&lt;List&lt;String&gt;&gt; task = new Callable&lt;List&lt;String&gt;&gt;() {
+          <pre class="prettyprint">        Callable&lt;List&lt;String&gt;&gt; task = new Callable&lt;List&lt;String&gt;&gt;() {
             @Override
             public List&lt;String&gt; call() throws Exception {
                 Path path = Paths.get("README.md");
                 return Files.readAllLines(path);
             }
-        };</pre></div>
+        };</pre>
+        </div>
         <p>&nbsp;</p>
         <h4>2-3. Lambda 式で書き換えてみましょう</h4>
         <p>2-2 は Callable インタフェースを使用してファイルの内容を戻り値として返していました。Runnable インタフェースは戻り値がないので、別スレッドで表示まで行ってみました。これもラムダ式で記述できます。</p>
         <div>
-        <pre class="prettyprint">        Runnable task = new Runnable() {
+          <pre class="prettyprint">        Runnable task = new Runnable() {
             @Override
             public void run() {
                 try {
@@ -130,7 +133,8 @@
                     System.err.println("Fail Read.");
                 }
             }
-        };</pre></div>
+        };</pre>
+        </div>
         <p>&nbsp;</p>
         <h4>2-4. Lambda 式で書き換えてみましょう</h4>
         <p>Function インタフェースは Stream API と一緒に導入された関数型インタフェースで、引数が 1 つ、戻り値がある処理を表すために使用します。ここでは、文字列を数値に変換する処理を表しています。</p>
@@ -193,24 +197,42 @@
         <a name="sec3" id="sec3" ></a>
         <h3>3. for 文の書きかえ (forEach)</h3>
         <p>Lambda 文を書くことに慣れたら、for 文もしくは拡張 for 文を Stream API で書き直してみましょう。</p>
+        <p>ストリームは様々な処理を行うことができるイテレータです。Iterable インタフェースのように、自身ではオブジェクトを保持せずに、元となるコレクションなどの要素をイテレートしていきます。</p>
+        <p>ストリームにはオブジェクトを対象とした Stream インタフェース、プリミティブ型を対象にした IntStream インタフェース、LongStream インタフェース、DoubleStream インタフェースの 4 種類があります。</p>
+        <p>基本的なメソッドは同じですが、sum メソッド、max メソッドなどプリミティブ型が対象のストリームにしかないメソッドもあります。</p>
+        <p>ストリームの生成には複数の方法があります。コレクションから生成するには、 Collection#stream メソッドを使用します。また、IntStream オブジェクトを生成するには、前述した range メソッドを使用するのが手軽です。</p>
         <p>Stream API のメソッドには中間処理と終端処理に分類されます。そして、Stream API は複数の中間処理を連ね、最後に終端処理を行うスタイルでコードを記述していきます。これを Stream パイプラインと呼びます。</p>
+        <p>中間操作の戻り値は必ずストリームになります。終端操作の戻り値がストリームパイプラインの処理結果になるわけです。</p>
+        <p>&nbsp;</p>
         <p>さて、この Lambda お稽古では以下の 5 種類のメソッドを使用します。</p>
         <ul>
-          <li>中間処理
+          <li>中間操作
             <ul>
-              <li>filter</li>
-              <li>map</li>
-              <li>flatMap</li>
+              <li>filter 条件に合致した要素だけをフィルタリングする</li>
+              <li>map 要素を、他の値に変換する</li>
+              <li>flatMap 要素をストリームに変換し、それを連結して 1 つのストリームを生成する</li>
             </ul>
           </li>
-          <li>終端処理
+          <li>終端操作
             <ul>
-              <li>forEach</li>
-              <li>collect</li>
+              <li>forEach 各要素に対して、何らかの処理を行う</li>
+              <li>collect 要素の集約処理を行う</li>
             </ul>
           </li>
         </ul>
         <p>forEach メソッドは for 文/拡張 for 文からの置き換えが容易なので、まず forEach メソッドを使用し、次章で collect メソッドを扱います。</p>
+        <p>中間操作のfilter メソッドと map メソッドは中間操作なので、戻り値はストリームになります。</p>
+        <p>filter メソッドは条件に合致した要素だけをフィルタリングし、新たなストリームを生成するメソッドです。</p>
+        <div class="text-center figure"> <img src="images/filter0.png" alt="Lambda式への変換" width="418" height="116" />
+          <p>filter メソッド</p>
+        </div>
+        <p>一方の map メソッドは各要素に対し、何らかの処理を行い、新たな値を作成することで、新たなストリームを作成します。以下の図では文字列のストリームの個々の要素を、Integer オブジェクトに変換しています。最終的に Stream&lt;Integer&gt; オブジェクトを生成します。</p>
+        <div class="text-center figure"> <img src="images/map0.png" alt="Lambda式への変換" width="516" height="117" />
+          <p>map メソッド</p>
+        </div>
+        <p>mapToInt メソッドなどの mapToX メソッド群は、map メソッドの一種で、Stream オブジェクトからプリミティブ型に対応した InstStream オブジェクトなど、もしくはプリミティブ型に対応したストリームから Stream オブジェクトへの変換を行うメソッドです。 </p>
+        <p>また、flatMap メソッドも map メソッドの一種ですが、個々の要素をストリームに変換します。通常の map メソッドだと、個々の要素をストリームにすると、ストリームの要素にストリームという入れ子のストリームになります。これに対し、flatMap メソッドでは個々の要素を変換してできたストリームを展開し、最終的に 1 つのストリームに変換するところが map メソッドと異なります。</p>
+        <p>では、まず forEach メソッドで書き換えを行ってみましょう。</p>
         <p>&nbsp;</p>
         <h4>3-1. forEach メソッドで書き換えてみましょう</h4>
         <p>次の printList メソッドは文字列のリストを引数にとって、そのリストの要素を標準出力に出力するメソッドです。</p>
@@ -224,74 +246,159 @@
         </div>
         <p>&nbsp;</p>
         <h4>3-2. forEach メソッドで書き換えてみましょう</h4>
+        <p>先ほどは、単純に要素を標準出力に出力していました。では、要素のうち、aで始まるものを出力してみましょう。</p>
+        <p>拡張 for 文で記述すると次のようになります。</p>
+        <p>&nbsp;</p>
         <div>
-          <pre class="prettyprint">        List&lt;Integer&gt; numbers = Arrays.asList(10, 5, 2, 20, 12, 15);
- 
-        int sum = 0;
-        for (Integer number: numbers) {
-            sum += number;
+          <pre class="prettyprint">    private void printList(List&lt;String&gt; texts) {
+        for (String text: texts) {
+            if (text.startsWith("a")) {
+                System.out.println(text);
+            }
         }
-        System.out.println(sum);</pre>
+    }</pre>
         </div>
+        <p>for 文の中に if 文が入っている構造です。</p>
+        <p>このように if 文で処理を行う対象をより分ける操作、つまりフィルタリングは、ストリームのあのメソッドを使って書けますよね。</p>
         <p>&nbsp;</p>
         <h4>3-3. forEach メソッドで書き換えてみましょう</h4>
-        <p>拡張 for 文でない、単純な for 文も forEach メソッドで書き換えることができます。</p>
-        <p>ただし、ループカウンターを作成しなければなりません。0 から 9 までの数値の入った配列やリストを作成してもよいのですが、それよりもプリミティブ型に対応したストリームを使う方がスマートです。</p>
-        <p>ここではループカウンタが int なので、IntStream インタフェースを使用することができます。IntStream インタフェースには、範囲を指定して IntStream オブジェクトを生成する range メソッドが定義されていますので、これを利用します。</p>
-        <p>Stream インタフェースや IntStream インタフェースなどにも forEach メソッドがあるので、それを使用してみましょう。</p>
+        <p>今度は、アルファベットの大文字と小文字が混じっている文字列を要素とするリストを対象とします。</p>
+        <p>JavaとjAVAのように大文字と小文字が混ざっていると比較する場合などに面倒ですね。ですから全部小文字にしてしまいましょう。文字列をすべて小文字で表すには String クラスの toLowerCase メソッドを使用します。</p>
+        <p>まず、拡張 for 文で書いてみましょう。</p>
         <div>
-          <pre class="prettyprint">        for (int i = 0; i &lt; 10; i++) {
-            System.out.print(i);
+          <pre class="prettyprint">    private void printList(List&lt;String&gt; texts) {
+        for (String text: texts) {
+            String lowerText = text.toLowerCase();
+
+            System.out.println(lowerText);
         }
-        System.out.println();</pre><a name="sec4" id="sec4" ></a>
+    }</pre>
+        </a> </div>
+        <p>これをストリームで書きかえてみましょう。個々の値に対して、新しい値を作成するには、あのメソッドが使えますよ。</p>
+        <h4>3-4. forEach メソッドで書き換えてみましょう</h4>
+        <p>次に、3-2 と 3-3 を組み合わせてみましょう。</p>
+        <p>すべて小文字に変換してから、jで始まる文字列を出力します。</p>
+        <p>拡張 for 文だとこうなります。</p>
+        <div>
+          <pre class="prettyprint">    private void printList(List&lt;String&gt; texts) {
+        for (String text: texts) {
+            String lowerText = text.toLowerCase();
+            
+            if (lowerText.startsWith(("j"))) {
+                System.out.println(lowerText);
+            }
+        }
+    }</pre>
+        </a> </div>
+        <p>これをストリームで書きかえてみましょう。今までの応用ですから、簡単ですね。</p>
+        <h4>3-5. forEach メソッドで書き換えてみましょう</h4>
+        <p>文字列のリストに英語の文章が入っているとします。このとき、文章の中にどういう単語が使われているかを調べてみましょう。</p>
+        <p>これを行うには、文字列を単語単位に切り出す必要があります。</p>
+        <p>たとえば、使われている単語を出力するのであれば、次のように for 文で記述できます。</p>
+        <div>
+          <pre class="prettyprint">    private void splitWords(List&lt;String&gt; texts) {
+        for (String text: texts) {
+            // 文字列から単語を切り出す
+            // 正規表現を使って、単語間にあるスペースなどを使用して切り出す
+            String[] words = text.split(" |\\.|\\,|\\?");
+            
+            for (String word: words) {
+                System.out.println(word);
+            }
+        }
+    }</pre>
+        </a> </div>
+        <p>for 文がネストしてしまうのが気になるところです。これをストリームの flatMap メソッドを使って書きかえてみましょう。</p>
+        <h4>3-6. forEach メソッドで書き換えてみましょう</h4>
+        <p>今までは拡張 for 文の書きかえでしたが、普通の for 文の書きかえも試してみましょう。</p>
+        <p>次のコードは 0 から 19 までの数値のうち、偶数を出力するものです。これもストリームで書いてみましょう。</p>
+        <div>
+          <pre class="prettyprint">    private void printEvens() {
+        for (int i = 0; i &lt; 20; i++) {
+            if (i % 2 == 0) {
+                System.out.println(i);
+            }
+        }
+    }</pre>
+        </a> </div>
+        <p>今までのように Stream インタフェースではなく、IntStream インタフェースを使用します。IntStream インタフェースを生成するためのメソッドがありますよね。</p>
+        <a name="sec4" id="sec4" ></a>
+        <p>&nbsp;</p>
+        <h3>4. for 文の変換 (collect)</h3>
+        <p>最後は、終端操作の collect メソッドを使った書き換えです。</p>
+        <p>collect メソッドは、java.util.stream.Collectors クラスと共に使用して、ストリームの要素を集約する処理を行います。</p>
+        <p>Collectors クラスにはさまざまなメソッドが定義されています。主なものを以下に示します。</p>
+        <p>&nbsp;</p>
+        <div class="table">
+        <div style="margin-left:: 100px; font-weight: bold;">表1 Collectorsクラスの主なメソッド</div>
+        <table style="width:600">
+          <tr>
+            <th align="left">メソッド名</th>
+            <th align="left">説明</th>
+          </tr>
+          <tr>
+            <td align="left">toList<br />
+              toSet</td>
+            <td align="left">ストリームをリストもしくはセットに変換する</td>
+          </tr>
+          <tr>
+            <td align="left">joining</td>
+            <td align="left">文字列のストリームの要素を連結した文字列を生成する</td>
+          </tr>
+          <tr>
+            <td align="left">groupingBy</td>
+            <td align="left">ストリームの要素をグルーピングする</td>
+          </tr>
+          <tr>
+            <td align="left">partitioningBy</td>
+            <td align="left">ストリームの要素を条件合致するものと、しないものに分割する</td>
+          </tr>
+          <tr>
+            <td align="left">sumingInt<br />
+              sumingLong<br />
+              sumingDouble</td>
+            <td align="left">ストリームの要素を数値化し、合計する</td>
+          </tr>
+          <tr>
+            <td align="left">averagingInt<br />
+              averagingLong<br />
+              averagingDouble</td>
+            <td align="left">ストリームの要素を数値化し、平均を算出する</td>
+          </tr>
+          <tr>
+            <td align="left">summarizingInt<br />
+              summarizingLong<br />
+              summarizingDouble</td>
+            <td align="left">ストリームの要素を数値化し、統計情報を算出する</td>
+          </tr>
+          <tr>
+            <td align="left">counting</td>
+            <td align="left">要素数を数える</td>
+          </tr>
+          <tr>
+            <td align="left">maxBy<br />
+              minBy</td>
+            <td align="left">要素の最大/最小を求める</td>
+          </tr>
+          <tr>
+            <td align="left">reducing</td>
+            <td align="left">reduceメソッドと同じ処理を行う</td>
+          </tr>
+          <tr>
+            <td align="left">mapping</td>
+            <td align="left">mapメソッドと同じ処理を行う</td>
+          </tr>
+          <tr>
+            <td align="left">toMap</td>
+            <td align="left">マップに変換する</td>
+          </tr>
+        </table>
         </div>
         <p>&nbsp;</p>
-        <h3>4. for 文の変換 (Stream)</h3>
-        <p>最後は、ストリームです。</p>
-        <p>ストリームは様々な処理を行うことができるイテレータです。Iterable インタフェースのように、自身ではオブジェクトを保持せずに、元となるコレクションなどの要素をイテレートしていきます。</p>
-        <p>ストリームにはオブジェクトを対象とした Stream インタフェース、プリミティブ型を対象にした IntStream インタフェース、LongStream インタフェース、DoubleStream インタフェースの 4 種類があります。</p>
-        <p>基本的なメソッドは同じですが、sum メソッド、max メソッドなどプリミティブ型が対象のストリームにしかないメソッドもあります。</p>
-        <p>はじめから様々な処理を行っている for 文を変換するのは難しので、簡単な例から徐々に慣れていきましょう。</p>
-        <p>ストリームの生成には複数の方法があります。コレクションから生成するには、 Collection#stream メソッドを使用します。また、IntStream オブジェクトを生成するには、前述した range メソッドを使用するのが手軽です。</p>
-        <p>ストリームはメソッドを多段に連ねて、処理を行います。これをストリームのパイプラインと呼びます。</p>
-        <p>パイプラインの最後に使用できるメソッドが終端操作、それ以外を中間操作と呼びます。中間操作の戻り値は必ずストリームになります。終端操作の戻り値がストリームパイプラインの処理結果になるわけです。</p>
-        <p>今回、使用するストリームの主なメソッドは終端操作が 3 種類、中間操作が 3 種類です。</p>
-        <p>終端操作</p>
-        <ul>
-          <li>forEach 各要素に対して、何らかの処理を行う</li>
-          <li>reduce 前回値を用いて、集約処理を行う</li>
-          <li>collect 要素の集約処理を行う</li>
-        </ul>
-        <p>中間操作</p>
-        <ul>
-          <li>filter 条件に合致した要素だけをフィルタリングする</li>
-          <li>map/mapToInt/mapToDouble/mapToLong/mapToObj 要素を、他の値に変換する</li>
-          <li>flatMap 要素をストリームに変換し、それを連結して 1 つのストリームを生成する</li>
-        </ul>
-        <p>この 6 種類のメソッドが使いこなせれば、ストリームは攻略できるはずです。</p>
-        <p>以下に reduce メソッド、filter メソッド、map メソッドの概念図をあげておきます。</p>
-        <p>reduce メソッドは初期値 (単位元) があり、初期値と初めの要素で何らかの処理を行い、値を返します。その値が次のイテレートのラムダ式の第 1 引数として使用されます。このようにして、最後までイテレートを行い、その戻り値が最終的な結果になります。</p>
-        <div class="text-center figure">
-          <img src="images/reduce0.png" alt="Lambda式への変換" width="297" height="233" />
-          <p>reduce メソッド</p>
-        </div>
-        <p>filter メソッドと map メソッドは中間操作なので、戻り値はストリームになります。</p>
-        <p>filter メソッドは条件に合致した要素だけをフィルタリングし、新たなストリームを生成するメソッドです。</p>
-        <div class="text-center figure">
-          <img src="images/filter0.png" alt="Lambda式への変換" width="418" height="116" />
-          <p>filter メソッド</p>
-        </div>
-        <p>一方の map メソッドは各要素に対し、何らかの処理を行い、新たな値を作成することで、新たなストリームを作成します。以下の図では文字列のストリームの個々の要素を、Integer オブジェクトに変換しています。最終的に Stream&lt;Integer&gt; オブジェクトを生成します。</p>
-        <div class="text-center figure">
-          <img src="images/map0.png" alt="Lambda式への変換" width="516" height="117" />
-          <p>map メソッド</p>
-        </div>
-        <p>mapToInt メソッドなどの mapToX メソッド群は、map メソッドの一種で、Stream オブジェクトからプリミティブ型に対応した InstStream オブジェクトなど、もしくはプリミティブ型に対応したストリームから Stream オブジェクトへの変換を行うメソッドです。     </p>
-        <p>また、flatMap メソッドも map メソッドの一種ですが、個々の要素をストリームに変換します。通常の map メソッドだと、個々の要素をストリームにすると、ストリームの要素にストリームという入れ子のストリームになります。これに対し、flatMap メソッドでは個々の要素を変換してできたストリームを展開し、最終的に 1 つのストリームに変換するところが map メソッドと異なります。</p>
         <p>では、これらのメソッドを使って、for 文をストリームに書き換えて見ましょう。</p>
         <p>&nbsp;</p>
         <h4>4-1. Stream で書き換えてみましょう</h4>
-        <p>はじめに行うのが、条件文を含む拡張 for 文です。        </p>
+        <p>はじめに行うのが、条件文を含む拡張 for 文です。 </p>
         <p>最終的に行う処理は標準出力への出力なので、これは forEach メソッドが使用できます。まず、すべてを forEach メソッドで記述してみましょう。</p>
         <p>次に条件文を filter メソッドで書き換えることに挑戦してみましょう。</p>
         <div>
@@ -315,21 +422,23 @@
         <p>collect メソッドの引数には Collectors クラスのユーティリティメソッドの戻り値を私用する場合がほとんどです。この場合、何が使用できるかチェックしてみましょう。</p>
         <p>&nbsp;</p>
         <div>
-        <pre class="prettyprint">        Random random = new Random();
+          <pre class="prettyprint">        Random random = new Random();
         List&lt;Double&gt; numbers = new ArrayList<>();
         for (int i = 0; i &lt; 100; i++) {
             numbers.add(random.nextDouble());
-        }</pre></div>
+        }</pre>
+        </div>
         <p>さて、生成したリストの平均を算出しましょう。</p>
         <p>この場合、中間操作は必要ないので、いきなり終端操作を記述します。この場合のように、すべての要素をまとめて 1 つの値にまとめるには、reduce メソッドか collect メソッドを使用します。</p>
         <p>ここでは、reduce メソッドを使用してみましょう。collect メソッドを使用した場合も、reduce メソッドの使い方が分からないと記述できないので、reduce メソッドをまず攻略してみましょう。</p>
-        <p>reduce メソッドで処理が記述できたら、このコードをもう少し効率よく記述できないか考えてみましょう。キーになるのはオートボクシングです。        </p>
+        <p>reduce メソッドで処理が記述できたら、このコードをもう少し効率よく記述できないか考えてみましょう。キーになるのはオートボクシングです。 </p>
         <div>
-        <pre class="prettyprint">        double ave = 0.0;
+          <pre class="prettyprint">        double ave = 0.0;
         for (Double x: numbers) {
             ave += x;
         }
-        ave /= numbers.size();</pre></div>
+        ave /= numbers.size();</pre>
+        </div>
         <p>最後に分散処を求める処理です。平均が記述できれば、分散も簡単に書けるはずですよ。</p>
         <div>
           <pre class="prettyprint">        double div = 0.0;
