@@ -398,84 +398,142 @@
         <p>では、これらのメソッドを使って、for 文をストリームに書き換えて見ましょう。</p>
         <p>&nbsp;</p>
         <h4>4-1. collect で書き換えてみましょう</h4>
-        <p>。</p>
+        <p>はじめに行うのは、リストのコピーです。</p>
+        <p>for 文でリストのコピーをすることはまずないとは思いますが、練習だと思って、ご了承ください。</p>
         <div>
-          <pre class="prettyprint">        List&lt;Integer&gt; numbers = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
-        for (Integer x: numbers) {
-            if (x % 2 == 0) {
-                System.out.print(x);
-            }
+          <pre class="prettyprint">    private List&lt;String> copyList(List&lt;String> src) {
+        List&lt;String> dest = new ArrayList&lt;>();
+        
+        for (String element: src) {
+            dest.add(element);
         }
-        System.out.println();</pre>
+        
+        return dest;
+    }</pre>
         </div>
+        <p>collect メソッドを使えば、もっと簡潔に書けるはずです。表 1 の一番上に、そういうメソッドがありますね。</p>
         <p>&nbsp;</p>
         <h4>4-2. collect で書き換えてみましょう</h4>
-        <p>。</p>
+        <p>整数のリストのうち、偶数だけを取り出したリストを作ってみましょう。for 文で書くと次のようになります。</p>
         <p>&nbsp;</p>
         <div>
-          <pre class="prettyprint">        Random random = new Random();
-        List&lt;Double&gt; numbers = new ArrayList<>();
-        for (int i = 0; i &lt; 100; i++) {
-            numbers.add(random.nextDouble());
-        }</pre>
+          <pre class="prettyprint">    private List&lt;Integer> expressEvens(List&lt;Integer> numbers) {
+        List&lt;Integer> evens = new ArrayList&lt;>();
+        
+        for (int x: numbers) {
+            if (x % 2 == 0) {
+                evens.add(x);
+            }
+        }
+        
+        return evens;
+    }</pre>
         </div>
-        <p>&nbsp;</p>
+        <p>collect メソッドだけではできませんが、フィルタリングするメソッドも一緒に使えばできますね。</p>
         <h4>4-3. collect で書き換えてみましょう</h4>
-        <p>。</p>
+        <p>4-2 とほぼ同じですが、整数の配列から偶数のリストを作成してみましょう。</p>
         <p></p>
         <div>
-          <pre class="prettyprint">        List&lt;String&gt; sentences = ...;
+          <pre class="prettyprint">    private List&lt;Integer> expressEvens(int[] numbers) {
+        List&lt;Integer> evens = new ArrayList<>();
         
-        List&lt;String&gt; words = new ArrayList&lt;&gt;();
-        for (String sentence: sentences) {
-            String[] splitedSentence  = sentence.split(" ");
-            for (String word: splitedSentence) {
-                words.add(word);
+        for (int x: numbers) {
+            if (x % 2 == 0) {
+                evens.add(x);
             }
-        }</pre>
+        }
+        
+        return evens;
+    }</pre>
         </div>
+        <p>for 文で記述すると、4-2 とほとんど同じになってしまいます。コードは同じなのですが、行っている処理は異なります。何が異なっているか分かりますか? 分かれば、ストリームに書き直す方法も分かるはず。</p>
         <p>&nbsp;</p>
         <h4>4-4. collect で書き換えてみましょう</h4>
-        <p>。</p>
+        <p>次に文字列の連結を行ってみましょう。</p>
         <div>
-          <pre class="prettyprint">        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-            int wordCount = 0;
-            
-            for (;;) {
-                String line = reader.readLine();
-                if (line == null) {
-                    break;
-                }
-                
-                String[] words = line.split(" ");
-                wordCount += words.length;
-            }
-            System.out.println(wordCount);
-        } catch (IOException ex) {
-            // 例外処理
-        } </pre>
+          <pre class="prettyprint">    private String joinText(List&lt;String> texts) {
+        StringBuilder builder = new StringBuilder();
+        
+        for (String text: texts) {
+            builder.append(text);
+        }
+        
+        return builder.toString();
+    }</pre>
         </div>
+        <p>これも collect メソッドを使うと、簡単にかけますよ。</p>
         <p>&nbsp;</p>
         <h4>4-5. collect で書き換えてみましょう</h4>
-        <p>。</p>
+        <p>単語が要素となっているリストを、単語の頭文字でグルーピングしてみましょう。</p>
+        <p>グループは Map インタフェースで表し、キーが頭文字、バリューが単語のリストになるようにします。 </p>
         <div>
-          <pre class="prettyprint">        List&lt;String&gt; sentences = ...;
-          
-        Map&lt;String, Integer&gt; result = new HashMap&lt;&gt;();
+          <pre class="prettyprint">    private Map&lt;String, List&lt;String>> groupWords(List&lt;String> words) {
+        Map&lt;String, List&lt;String>> groups = new HashMap<>();
         
-        for (String sentence: sentences) {
-            String[] splitedSentence  = sentence.split(" ");
-            
-            for (String word: splitedSentence) {
-                String lowerWord = word.toLowerCase();
-                int count = result.getOrDefault(lowerWord, 0);
-                result.put(lowerWord, count+1);
+        for (String word: words) {
+            String key = word.substring(0, 1);
+            List&lt;String> group = groups.get(key);
+            if (group == null) {
+                group = new ArrayList<>();
+                group.add(word);
+                groups.put(key, group);
+            } else {
+                group.add(word);
             }
-        }</pre>
+        }
+        
+        return groups;
+    }</pre>
+        </div>
+        <p>for 文で記述すると、ちょっと煩雑ですね。これも collect メソッドを使えば、簡単にかけますよ。</p>
+        <h4>4-6. collect で書き換えてみましょう</h4>
+        <p>4-5 では単語の頭文字でグルーピングしましたが、頭文字ごとに単語がいくつかあったか数えてみましょう。</p>
+        <p>結果は Map インタフェースで表し、キーが頭文字、バリューが個数とします。 </p>
+        <div>
+          <pre class="prettyprint">    private Map&lt;String, Integer> groupWords(List&lt;String> words) {
+        Map&lt;String, Integer> groups = new HashMap<>();
+        
+        for (String word: words) {
+            String key = word.substring(0, 1);
+            Integer count = groups.getOrDefault(key, 0);
+            count++;
+            groups.put(key, count);
+        }
+        
+        return groups;
+    }</pre>
+        </div>
+        <p>Map インタフェースの getOrDefault メソッドが見慣れないメソッドかもしれません。このメソッドは Java SE 8 から追加されたメソッドで、キーが登録されてない場合、第 2 引数がそのまま返るというメソッドです。</p>
+        <p>今まではキーが登録されていないと、null が戻るので、null かどうか調べてということをやっていました。でも、getOrDefault メソッドを使用すれば、null かどうか気にせずに記述できますよ。</p>
+        <p>さて、これを collect メソッドで書きかえるわけですが、ちょっと難しいですね。Collectors クラスのメソッドには Collector インタフェースを引数にとるものが多くあります。この Collector インタフェースの引数に、もう一度 Collectors クラスのメソッドを記述すると、集約処理を行った後に、もう一度集約処理を行うことができます。</p>
+        <p>このようなメソッドを使えば、できるはずですよ。</p>
+        <h4>4-7. collect で書き換えてみましょう</h4>
+        <p>最後はワードカウントを作ってみましょう。文章を要素にもつリストから、単語の使用頻度を調べてみます。</p>
+        <p>今までやってきたことを組み合わせればできるはず。 </p>
+        <div>
+          <pre class="prettyprint">    private Map&lt;String, Integer> countWord(List&lt;String> texts) {
+        Map&lt;String, Integer> wordCounters = new HashMap&lt;>();
+        
+        for (String text: texts) {
+            // 文字列から単語を切り出す
+            // 正規表現を使って、単語間にあるスペースなどを使用して切り出す
+            String[] words = text.split(" |\\.|\\,|\\?");
+
+            for (String word: words) {
+                word = word.toLowerCase();
+                
+                Integer count = wordCounters.getOrDefault(word, 0);
+                count++;
+                wordCounters.put(word, count);
+            }
+        }
+        
+        return wordCounters;
+    }</pre>
         </div>
         <p>&nbsp;</p>
         <p>いかがでしたでしょうか。</p>
-        <p>ちなみに、個々の問題は正解が 1 つとは限りません。いろいろな書き方があり、それに応じて使用するメソッドも変化します。いろいろな書き方をできるようにしておくと、応用範囲が広がると思います。</p>
+        <p>ちなみに、個々の問題は正解が 1 つとは限りません。いろいろな書き方があり、それに応じて使用するメソッドも変化します。いろいろな書き方をできるようにしておくと、応用範囲が広がるとはずです。</p>
         <p>&nbsp;</p>
       </div>
     </div>
