@@ -1,6 +1,5 @@
 package questions.chapter4;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +18,12 @@ public class Collect07 {
                 "Where's the peck of pickled peppers",
                 "Peter Piper picked?");
                 
-        Map<String, Integer> wordCounters = countWord(texts);
+        Map<String, Long> wordCounters = countWord(texts);
         System.out.println(wordCounters);
     }
     
-    private Map<String, Integer> countWord(List<String> texts) {
-        Map<String, Integer> wordCounters = new HashMap<>();
+    private Map<String, Long> countWord(List<String> texts) {
+        Map<String, Long> wordCounters = new HashMap<>();
         
         for (String text: texts) {
             // 文字列から単語を切り出す
@@ -34,7 +33,7 @@ public class Collect07 {
             for (String word: words) {
                 word = word.toLowerCase();
                 
-                Integer count = wordCounters.getOrDefault(word, 0);
+                Long count = wordCounters.getOrDefault(word, 0L);
                 count++;
                 wordCounters.put(word, count);
             }

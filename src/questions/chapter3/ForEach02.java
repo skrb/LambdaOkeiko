@@ -14,7 +14,7 @@ public class ForEach02 {
     private void printList(List<String> texts) {
         for (String text: texts) {
             if (text.startsWith("a")) {
-                System.out.println(text.toLowerCase());
+                System.out.println(text);
             }
         }
     }

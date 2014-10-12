@@ -15,7 +15,7 @@ public class ForEach04 {
         for (String text: texts) {
             String lowerText = text.toLowerCase();
             
-            if (lowerText.startsWith(("j"))) {
+            if (lowerText.startsWith("j")) {
                 System.out.println(lowerText);
             }
         }
